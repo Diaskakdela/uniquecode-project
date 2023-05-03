@@ -8,6 +8,8 @@ import kz.geekpartners.uniquecodeservice.util.UniqueCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UniqueCodeServiceImpl implements UniqueCodeService {
@@ -16,18 +18,23 @@ public class UniqueCodeServiceImpl implements UniqueCodeService {
 
     @Override
     public String getUniqueCodeAndUpdate() {
-        UniqueCode uniqueCode = uniqueCodeRepository.findFirstByOrderById().orElseThrow(()->new UniqueCodeException("No unique code found in database"));
+        Optional<UniqueCode> optionalUniqueCode = uniqueCodeRepository.findFirstByOrderById();
 
-        String newCode = uniqueCodeGenerator.generateNewCode(uniqueCode.getCode());
+        UniqueCode uniqueCode;
+        if (optionalUniqueCode.isEmpty()) {
+            uniqueCode = new UniqueCode();
+            uniqueCode.setCode("a0a0");
+        } else {
+            uniqueCode = optionalUniqueCode.get();
+            String newCode = uniqueCodeGenerator.generateNewCode(uniqueCode.getCode());
 
-        if(newCode.isEmpty()){
-            throw new UniqueCodeException("New unique code has not generated");
+            if (newCode.isEmpty()) {
+                throw new UniqueCodeException("New unique code has not generated");
+            }
+            uniqueCode.setCode(newCode);
         }
 
-        uniqueCode.setCode(newCode);
         uniqueCodeRepository.save(uniqueCode);
-        return newCode;
+        return uniqueCode.getCode();
     }
-
-
 }
