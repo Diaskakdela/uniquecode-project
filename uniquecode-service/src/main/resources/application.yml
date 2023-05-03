@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: uniquecode-service
+  config:
+    import: optional:configserver:http://localhost:8081
+  flyway:
+    locations: classpath:/db/migration
+    baseline-on-migrate: true

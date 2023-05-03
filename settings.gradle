@@ -1,0 +1,3 @@
+rootProject.name = 'uniquecode-project'
+include 'uniquecode-service'
+include 'config-server'
