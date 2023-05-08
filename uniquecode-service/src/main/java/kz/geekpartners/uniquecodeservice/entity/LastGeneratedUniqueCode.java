@@ -5,5 +5,5 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
-public class UniqueCode extends BaseUniqueCode{
+public class LastGeneratedUniqueCode extends BaseUniqueCode{
 }
